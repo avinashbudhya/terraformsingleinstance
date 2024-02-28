@@ -18,7 +18,7 @@
       "region": "{{user `region`}}",
       "source_ami": "{{user `source_ami`}}",
       "instance_type": "{{user `instance_type`}}",
-      "ssh_username": "ubuntu",
+      "ssh_username": "ec2-user",
       "ami_name": "DevOpsClass-B18-Build-{{isotime | clean_resource_name}}",
       "vpc_id": "{{user `vpc_id`}}",
       "subnet_id": "{{user `subnet_id`}}",
@@ -30,33 +30,21 @@
       "type": "shell",
       "inline": [
         "sleep 30",
-        "sudo apt update -y",
-        "sudo apt install nginx -y",
-        "sudo apt install git -y",
+        "sudo yum update -y",
+        "sudo yum install nginx -y",
+        "sudo yum install git -y",
         "sudo git clone https://github.com/mavrick202/webhooktesting.git",
-        "sudo rm -rf /var/www/html/index.nginx-debian.html",
-        "sudo cp webhooktesting/index.html /var/www/html/index.nginx-debian.html",
-        "sudo cp webhooktesting/style.css /var/www/html/style.css",
-        "sudo cp webhooktesting/scorekeeper.js /var/www/html/scorekeeper.js",
+        "sudo rm -rf /usr/share/nginx/index.html",
+        "sudo cp webhooktesting/index.html /usr/share/nginx/index.html",
+        "sudo cp webhooktesting/style.css /usr/share/html/style.css",
+        "sudo cp webhooktesting/scorekeeper.js /usr/share/html/scorekeeper.js",
         "sudo service nginx start",
         "sudo systemctl enable nginx",
         "curl https://get.docker.com | bash"
         ]
-    },
-    {
-            "type": "file",
-            "source": "docker.service",
-            "destination": "/tmp/docker.service"
-    },
-    {
-        "type": "shell",
-        "inline": [
-            "sudo cp /tmp/docker.service /lib/systemd/system/docker.service",
-            "sudo usermod -a -G docker ubuntu",
-            "sudo systemctl daemon-reload",
-            "sudo service docker restart"
-        ]
+    
+    
 
-    }
-]
+    }]
+
   }
